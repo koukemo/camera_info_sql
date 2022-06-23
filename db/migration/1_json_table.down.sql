@@ -1,1 +1,1 @@
-DROP TABLE IF EXISTS json_tables;
+DROP TABLE IF EXISTS `json_tables`;

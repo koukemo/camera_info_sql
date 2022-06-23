@@ -1,6 +1,7 @@
 config = {
-    'user': 'koukemo',
-    'password': 'koukemo',
+    'user': 'test',
+    'password': 'test',
     'host': '127.0.0.1',
-    'database': 'koukemo'
+    'database': 'test',
+    'auth_plugin': 'mysql_native_password'
 }

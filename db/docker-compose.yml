@@ -4,12 +4,12 @@ services:
     image: mysql:8
     ports:
       - 3306:3306
-    container_name: camera_info_test_db
+    container_name: rosmsg_test_db
     environment:
-      MYSQL_ROOT_PASSWORD: koukemo
-      MYSQL_DATABASE: koukemo
-      MYSQL_USER: koukemo
-      MYSQL_PASSWORD: koukemo
+      MYSQL_ROOT_PASSWORD: test
+      MYSQL_DATABASE: test
+      MYSQL_USER: test
+      MYSQL_PASSWORD: test
     volumes:
       - ./mysql_data:/var/lib/mysql
   test_migrate:
@@ -17,16 +17,16 @@ services:
     depends_on:
       - test_db
     command: ["up"]
-    container_name: camera_info_db_migration
+    container_name: rosmsg_db_migration
     environment:
       WAIT_HOSTS: test_db:3306
       MIGRATIONS_DIR: /migration
-      MYSQL_HOST: test_db
+      MYSQL_HOST: rosmsg_test_db
       MYSQL_PORT: 3306
-      MYSQL_ROOT_PASSWORD: koukemo
-      MYSQL_DATABASE: koukemo
-      MYSQL_USER: koukemo
-      MYSQL_PASSWORD: koukemo
+      MYSQL_ROOT_PASSWORD: test
+      MYSQL_DATABASE: test
+      MYSQL_USER: test
+      MYSQL_PASSWORD: test
     volumes:
       - ./migration:/migration
 volumes:
