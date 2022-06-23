@@ -29,6 +29,7 @@ camera_info_sql
 │   └── jsons/
 └── camera_info_sql
     ├── sql_operations/
+    ├── ${Python files for table operations}
     └── camera_info_sql_node.py
 ```
 
@@ -92,7 +93,7 @@ python3 ~/ros2_ws/src/camera_info_sql/camera_info_sql/show_tables.py
 
 **View Table Datas** <br>
 default settings | table : 'json_tables', column : '*' <br>
-(If you want to change the settings, edit src/show_datas.py.)
+(If you want to change the settings, edit ~/ros2_ws/src/camera_info_sql/camera_info_sql/show_datas.py)
 
 ```shell
 python3 ~/ros2_ws/src/camera_info_sql/camera_info_sql/show_datas.py
