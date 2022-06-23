@@ -1,6 +1,8 @@
 # Camera Info SQL
 
-Sample of saving ros2's camera_info topic in json format to Database.
+[English](README.md) | [日本語](README_ja.md)
+
+Sample of saving ROS2's camera_info topic in json format to Database.
 
 ## Installing
 
@@ -10,7 +12,7 @@ Sample of saving ros2's camera_info topic in json format to Database.
 - Docker Compose
 - Python 3.6.x or later is required
     - mysql-connector-python (pip)
-- ros2 (The test was done with Humble.)
+- ROS2 (The test was done with Humble.)
   - v4l2_camera (webcam information publisher)
 
 ## Configurations
@@ -81,7 +83,7 @@ cd ~/ros2_ws
 ros2 run camera_info_sql camera_info_sub
 ```
 
-## Other Table Operations
+## Other Database Operations
 
 ### Enter MySQL
 
@@ -102,10 +104,10 @@ python3 ~/ros2_ws/src/camera_info_sql/camera_info_sql/show_tables.py
 
 **View Table Datas** <br>
 default settings | table : 'json_tables', column : '*' <br>
-(If you want to change the settings, edit ~/ros2_ws/src/camera_info_sql/camera_info_sql/show_datas.py)
+(If you want to change the settings, edit [camera_info_sql/camera_info_sql/show_columns.py](camera_info_sql/show_columns.py))
 
 ```shell
-python3 ~/ros2_ws/src/camera_info_sql/camera_info_sql/show_datas.py
+python3 ~/ros2_ws/src/camera_info_sql/camera_info_sql/show_columns.py
 ```
 
 <br>
