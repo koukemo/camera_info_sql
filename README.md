@@ -1,4 +1,4 @@
-# camera_info_sql
+# Camera Info SQL
 
 Sample of saving ros2's camera_info topic in json format to Database.
 
