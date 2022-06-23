@@ -1,3 +1,4 @@
+import os
 import rclpy
 import time
 from rclpy.node import Node
@@ -18,16 +19,22 @@ class CameraInfoSubscriber(Node):
 
     def listener_callback(self, camera_info: CameraInfo):
         try:
-            #self.get_logger().info('%s' % camera_info, once=True)
-            print(camera_info)
+            i = 1
 
-            camera_info_shaping = JsonOperation.camera_info_to_json(camera_info)
-            f = open('myfile.txt', 'w')
-            f.write(str(camera_info))
-            f.close()
-            f = open('myfile_shaping.json', 'w')
-            f.write(str(camera_info_shaping))
-            f.close()
+            workspace_path = os.path.join(os.environ['HOME'], 'ros2_ws/src/')
+            json_save_path = os.path.join(workspace_path, 'camera_info_sql/resource/jsons/')
+            os.makedirs(json_save_path, exist_ok=True)
+
+            # Write camera_info → camera_info_sql/resource/jsons/camera_info.json
+            print(f"Create camera_info_from_msg_{i}.json at {json_save_path}")
+            JsonOperation.write_json_from_ros_msg(camera_info, json_save_path, 'camera_info_from_msg_'+str(i))
+
+            # Insert camera_info → json_tables > json_datas column
+            print("Write camera_info to SQL")
+            SqlInsert.insert_json_tables(camera_info)
+
+            print(f"Create camera_info_from_sql.json at {json_save_path}")
+            JsonOperation.create_json_from_sql(json_save_path)
 
             time.sleep(100)
 
@@ -41,7 +48,8 @@ def main(args=None):
     camera_info_subscriber = CameraInfoSubscriber()
 
     try:
-        rclpy.spin(camera_info_subscriber)
+        while rclpy.ok():
+            rclpy.spin(camera_info_subscriber)
 
     except KeyboardInterrupt:
         pass

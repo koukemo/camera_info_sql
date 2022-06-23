@@ -1,6 +1,7 @@
-import mysql
+import mysql.connector
 import json
 import os
+import rosidl_runtime_py
 
 from camera_info_sql.sql_operations.config import config
 
@@ -29,7 +30,7 @@ class SqlGetdata:
 
         json_datas = {}
         for data in cursor:
-            json_datas[data[0]] = json.loads(data[2])
+            json_datas[data[0]] = json.loads(data[1])
         cursor.close()
         return json_datas
 
@@ -40,10 +41,10 @@ class SqlInsert:
         ctx = mysql.connector.connect(**config)
         cursor = ctx.cursor()
 
-        json_data = json.dumps(data)
+        json_data = JsonOperation.ros_msg_to_json(data)
 
-        sql = f"INSERT INTO json_tables(json_datas) VALUES ('{json_data}')"
-        cursor.execute(sql)
+        sql = "INSERT INTO json_tables(json_datas) VALUES (%s)"
+        cursor.execute(sql, (json_data,))
         ctx.commit()
         ctx.close()
 
@@ -94,33 +95,26 @@ class SqlDelete:
 
 class JsonOperation:
     @staticmethod
-    def camera_info_to_json(camera_info):
-        camera_info_shaping = str(camera_info).replace('=', ':')
-        camera_info_shaping = camera_info_shaping.replace('sensor_msgs.msg.CameraInfo(', '')
-        camera_info_shaping = camera_info_shaping.rstrip()
-        camera_info_shaping = camera_info_shaping.replace('std_msgs.msg.Header', '')
-        camera_info_shaping = camera_info_shaping.replace('sensor_msgs.msg.RegionOfInterest', '')
-        camera_info_shaping = camera_info_shaping.replace('builtin_interfaces.msg.Time', '')
-        camera_info_shaping = camera_info_shaping.replace('array', '')
-        camera_info_shaping = camera_info_shaping.replace('([', '[{')
-        camera_info_shaping = camera_info_shaping.replace('])', '}]')
-        camera_info_shaping = camera_info_shaping.replace('(', '{')
-        camera_info_shaping = camera_info_shaping.replace(')', '}')
-        camera_info_shaping = '{' + camera_info_shaping
+    def ros_msg_to_json(msg_data):
+        dict_data = rosidl_runtime_py.message_to_ordereddict(msg_data)
+        json_data = json.dumps(dict_data, indent=2)
 
-        stud_obj = json.loads(camera_info_shaping)
-
-        return json.dumps(stud_obj, indent=4)
-
+        return json_data
 
     @staticmethod
-    def create_json(save_dir_path: str):
+    def write_json_from_ros_msg(msg_data, save_dir_path: str, save_file_name: str = "camera_info_from_msg"):
+        dict_data = rosidl_runtime_py.message_to_ordereddict(msg_data)
+        with open(os.path.join(save_dir_path, save_file_name) + '.json', 'w') as f:
+            json.dump(dict_data, f, indent=2)
+
+    @staticmethod
+    def create_json_from_sql(save_dir_path: str):
         ctx = mysql.connector.connect(**config)
         cursor = ctx.cursor()
 
         json_data = SqlGetdata.get_json_data("json_tables")
 
         for key, value in json_data.items():
-            save_file_name = "db_json_sample_" + str(key)
+            save_file_name = "camera_info_from_sql_" + str(key)
             with open(os.path.join(save_dir_path, save_file_name) + '.json', 'w') as f:
-                json.dump(value, f, indent=4)
+                json.dump(value, f, indent=2)
