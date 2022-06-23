@@ -83,6 +83,15 @@ ros2 run camera_info_sql camera_info_sub
 
 ## Other Table Operations
 
+### Enter MySQL
+
+With the docker DB container started, run the following: <br>
+(The password is set to "test" by default.)
+
+```shell
+mysql -h 127.0.0.1 -P 3306 -u test -p
+```
+
 ### View Table, Data, etc
 
 **View Table Name** <br>
