@@ -18,7 +18,7 @@ Sample of saving ros2's camera_info topic in json format to Database.
 ---
 
 ```
-camera-info-sql
+camera_info_sql
 ├── docs
 │   └── figures/
 ├── db
